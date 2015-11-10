@@ -140,7 +140,8 @@ public class EventDispatcher extends ListenerAdapter<ManalithBot> {
 
 		// 릴레이 메시지일 경우 로컬 메시지로 변환한다.
 		// TODO 메시지 필터 구현
-		if (sender.equals("♠") || sender.equals("♠_")) {
+		if (sender.equals("♠") || sender.equals("♠_") || sender.equals("♣")
+				|| sender.equals("♣_") || sender.equals("NyangCat")) {
 			sender = CommandParser.getSenderByRelayMessage(message);
 			message = CommandParser.convertRelayToLocalMessage(message);
 		}
