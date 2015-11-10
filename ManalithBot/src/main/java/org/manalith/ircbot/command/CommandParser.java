@@ -83,7 +83,7 @@ public class CommandParser {
 		// "<setzer> 어쩌고" 식의 메시지를 받아 "setzer"를 반환
 
 		String regex0 = "<([^>]*)>\\s+";
-		String regex1 = "\\[[^\\]]*\\]\\s+";
+		String regex1 = "\\[([^\\]]*)\\]\\s+";
 
 		Pattern p0 = Pattern.compile(regex0);
 		Pattern p1 = Pattern.compile(regex1);
