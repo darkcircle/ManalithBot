@@ -76,12 +76,15 @@ public class KeySeqConvPlugin extends SimplePlugin {
 		snengine.setEnableConversionExclusionSyntax(enableConversionExclusionSyntax);
 
 		String[] args = msg.split("\\s", 2);
+		String cmd = args[0];
 		if (args.length != 2) {
-			event.respond(getHelp());
+			if (cmd.equals("!c2") || cmd.equals("!c2r") || cmd.equals("!c3")
+					|| cmd.equals("!c33") || cmd.equals("!c3n"))
+				event.respond(getHelp());
+
 			return;
 		}
 
-		String cmd = args[0];
 		String srcmsg = args[1];
 		String dstmsg = "";
 
