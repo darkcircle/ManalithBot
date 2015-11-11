@@ -159,15 +159,6 @@ http://www.springframework.org/schema/lang http://www.springframework.org/schema
 	</bean>
 	<!-- 주소 단축 플러그인 설정 내용 끝 -->
 
-	<!-- 젠투 검색 프로바이더 확장 설정 -->
-	<bean id="gentooPackageFinder"
-		class="org.manalith.ircbot.plugin.linuxpkgfinder.GentooPackageFinder">
-		<property name="provider">
-			<ref bean="gentooPortageProvider" /> <!-- as a default -->
-			<!-- <ref bean="phPortageProvider" /> -->
-		</property>
-	</bean>
-
 	<!-- 영타 변환 플러그인 설정 -->
 	<bean id="keySeqConvPlugin" class="org.manalith.ircbot.plugin.keyseqconv.KeySeqConvPlugin">
 		<!-- 영타 변환 제외구역 설정 문법 적용여부 -->
