@@ -24,7 +24,7 @@ public class TimePlugin extends SimplePlugin {
 	private final PeriodFormatter periodFormatter = new PeriodFormatterBuilder()
 			.appendYears().appendSuffix("년 ").appendMonths().appendSuffix("월 ")
 			.appendWeeks().appendSuffix("주 ").appendDays().appendSuffix("일 ")
-			.appendHours().appendSuffix("시 ").appendMinutes()
+			.appendHours().appendSuffix("시간 ").appendMinutes()
 			.appendSuffix("분 ").appendSeconds().appendSuffix("초")
 			.printZeroNever().toFormatter();
 
