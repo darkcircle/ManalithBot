@@ -38,20 +38,19 @@ public class TokenObject {
 
 		switch (tt.value()) {
 		case 0:
-			switch(ts)
-			{
-				case "help":
-					result = TokenSubtype.CommandHelp;
-					break;
-				case "show":
-					result = TokenSubtype.CommandShow;
-					break;
-				case "unitlist":
-					result = TokenSubtype.CommandUnitList;
-					break;
-				case "calc":
-					result = TokenSubtype.CommandCalc;
-					break;
+			switch (ts) {
+			case "help":
+				result = TokenSubtype.CommandHelp;
+				break;
+			case "show":
+				result = TokenSubtype.CommandShow;
+				break;
+			case "unitlist":
+				result = TokenSubtype.CommandUnitList;
+				break;
+			case "calc":
+				result = TokenSubtype.CommandCalc;
+				break;
 			}
 			break;
 		case 1:
@@ -60,7 +59,7 @@ public class TokenObject {
 		case 2:
 			if (Pattern.matches("[0-9]+", ts))
 				result = TokenSubtype.NumberNatural;
-			else if (Pattern.matches("0-9]+\\.[0-9]+", ts))
+			else if (Pattern.matches("([1-9][0-9]*|[0-9])\\.[0-9]+", ts))
 				result = TokenSubtype.NumberFloatingPoint;
 			break;
 		default:
