@@ -129,11 +129,12 @@ public class CurexRunner {
 			if (sourceUnit.equals("JPY") || sourceUnit.equals("VND")
 					|| sourceUnit.equals("IDR") || sourceUnit.equals("KHR")) {
 
-				while (val.charAt(val.length() - 1) == '0') {
-					val = val.substring(0, val.length() - 1);
-				}
-
 				if (val.contains(".")) {
+
+					while (val.charAt(val.length() - 1) == '0') {
+						val = val.substring(0, val.length() - 1);
+					}
+
 					String[] varr = val.split("\\.");
 
 					int vl = varr[1].length();
@@ -151,12 +152,12 @@ public class CurexRunner {
 					}
 				}
 
-				result *= 100.0;
+				// result *= 100.0;
 			}
 		}
 
-		return String.format(Locale.getDefault(), val + " " + sourceUnit
-				+ " => %.4f " + targetUnit, result);
+		return String.format(Locale.getDefault(), "%s %s => %.4f %s", val,
+				sourceUnit, result, targetUnit);
 	}
 
 	public String getUnitListResult() {
