@@ -4,11 +4,11 @@
 	xmlns:task="http://www.springframework.org/schema/task" xmlns:security="http://www.springframework.org/schema/security"
 	xmlns:lang="http://www.springframework.org/schema/lang"
 	xsi:schemaLocation="
-http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
-http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
-http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
-http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.0.xsd">
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+	http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.0.xsd">
 	<!-- 데이터베이스 설정 -->
 	<import resource="datasource.xml" />
 
@@ -73,6 +73,7 @@ http://www.springframework.org/schema/lang http://www.springframework.org/schema
 				<ref bean="cryptoPlugin" />
 				<!-- <ref bean="onOffMixPlugin" /> -->
 				<ref bean="timePlugin" />
+				<ref bean="SOPlugin" />
 				<!-- <ref bean="translatorPlugin" /> -->
 				<!-- <ref bean="replPlugin" /> -->
 				<!-- alias 플러그인은 가능한 가장 나중에 두어야 기존 명령을 덮어쓰지 않습니다. -->
@@ -84,7 +85,7 @@ http://www.springframework.org/schema/lang http://www.springframework.org/schema
 
 	<!-- dropins 스크립트 플러그인들의 자동 재시작 시간  -->
 	<lang:defaults refresh-check-delay="5000" />
-	
+
 	<lang:groovy id="helloGroovyPlugin"
 		script-source="dropins/HelloGroovyPlugin.groovy" />
 
@@ -164,7 +165,7 @@ http://www.springframework.org/schema/lang http://www.springframework.org/schema
 		<!-- 영타 변환 제외구역 설정 문법 적용여부 -->
 		<property name="enableConvertionExclusionSyntax" value="true" />
 	</bean>
-	
+
 	<!-- 온오프믹스 플러그인 설정 -->
 	<bean id="onOffMixPlugin" class="org.manalith.ircbot.plugin.onoffmix.OnOffMixPlugin">
 		<property name="apiKey" value="YOUR_ONOFFMIX_API_KEY" />
@@ -180,7 +181,7 @@ http://www.springframework.org/schema/lang http://www.springframework.org/schema
 		<property name="username" value="MANALITH_BOT_OWNERS_USERNAME"/>
 		<property name="password" value="MANALITH_BOT_OWNERS_PASSWORD"/>
 	</bean>
-	
+
 	<!-- 맞춤법 검사 플러그인 설정 -->
 	<bean id="spellCheckerPlugin" class="org.manalith.ircbot.plugin.dictionary.SpellCheckerPlugin">
 		<property name="koreanDictionaryPath" value="/usr/share/hunspell/ko_KR" />
@@ -192,7 +193,13 @@ http://www.springframework.org/schema/lang http://www.springframework.org/schema
 		<!-- https://www.openexchangerates.org/ 참조 -->
 		<property name="appid" value="MANALITH_BOT_OWNERS_APPID"/>
 	</bean>
-	
+
+	<!-- 스택 오버플로 플러그인 설정 -->
+	<bean id="SOPlugin" class="org.manalith.ircbot.plugin.stackoverflow.SOPlugin">
+		<property name="googleAPIKey" value=""/>
+		<property name="cxStr" value=""/>
+	</bean>
+
 	<!-- Enemy Territory 플러그인 설정 -->
 	<!--
 	<bean id="etPlugin" class="org.manalith.ircbot.plugin.et.ETPlugin">
@@ -200,14 +207,14 @@ http://www.springframework.org/schema/lang http://www.springframework.org/schema
 		<property name="serverPort" value="27960" />
 	</bean>
 	 -->
-	
+
 	<!-- 번역 플러그인 설정 -->
 	<!-- 
 	<bean id="translatorPlugin" class="org.manalith.ircbot.plugin.translator.TranslatorPlugin">
 		<property name="clientSecret" value="YOUR_AZURE_TRANSLATOR_ID" />
 	</bean>
 	 -->
-	
+
 	<!-- Repl 플러그인 설정 -->
 	<!--
 	<bean id="replPlugin" class="org.manalith.ircbot.plugin.repl.ReplPlugin">
