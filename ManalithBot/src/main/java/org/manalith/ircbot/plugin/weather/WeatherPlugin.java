@@ -122,7 +122,7 @@ public class WeatherPlugin extends SimplePlugin {
 			String windDirection = node.get("wind_dir").asText();
 			String windSpeed = node.get("wind_kph").asText();
 
-			return String.format("[%s] %s 온도 %s℃, 습도 %s%%, 풍향: %s, 풍속: %skm/h", location, condition, temp, humidity,
+			return String.format("[%s] %s, 온도 %s℃, 습도 %s%%, 풍향: %s, 풍속: %skm/h", location, condition, temp, humidity,
 					windDirection, windSpeed);
 		} catch (IOException e) {
 			return "오류가 발생했습니다 : " + e.getMessage();
