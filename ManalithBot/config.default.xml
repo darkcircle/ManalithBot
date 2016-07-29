@@ -78,7 +78,6 @@
 				<!-- <ref bean="replPlugin" /> -->
 				<!-- alias 플러그인은 가능한 가장 나중에 두어야 기존 명령을 덮어쓰지 않습니다. -->
 				<ref bean="aliasPlugin" />
-				<ref bean="sc2Plugin" />
 			</list>
 		</property>
 	</bean>
@@ -163,7 +162,7 @@
 	<!-- 영타 변환 플러그인 설정 -->
 	<bean id="keySeqConvPlugin" class="org.manalith.ircbot.plugin.keyseqconv.KeySeqConvPlugin">
 		<!-- 영타 변환 제외구역 설정 문법 적용여부 -->
-		<property name="enableConvertionExclusionSyntax" value="true" />
+		<property name="enableConversionExclusionSyntax" value="true" />
 	</bean>
 
 	<!-- 온오프믹스 플러그인 설정 -->
@@ -192,6 +191,12 @@
 	<bean id="curexPlugin" class="org.manalith.ircbot.plugin.curex.CurexPlugin">
 		<!-- https://www.openexchangerates.org/ 참조 -->
 		<property name="appid" value="MANALITH_BOT_OWNERS_APPID"/>
+	</bean>
+
+	<!-- 날씨 정보(weather) 플러그인 설정 -->
+	<bean id="weatherPlugin" class="org.manalith.ircbot.plugin.weather.WeatherPlugin">
+		<!-- https://www.wunderground.com/ 참조 -->
+		<property name="wUndergroundAPIKey" value="MANALITH_BOT_OWNERS_APIKEY"/>
 	</bean>
 
 	<!-- 스택 오버플로 플러그인 설정 -->
