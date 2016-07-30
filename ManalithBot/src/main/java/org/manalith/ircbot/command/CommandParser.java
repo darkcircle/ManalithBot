@@ -57,17 +57,22 @@ public class CommandParser {
 
 		String regex0 = "<[^>]*>\\s+";
 		String regex1 = "\\[[^\\]]*\\]\\s+";
+		String regex2 = "\\[\\[\\]\\]\\s<[^>]*>\\s+";
 
 		Pattern p0 = Pattern.compile(regex0);
 		Pattern p1 = Pattern.compile(regex1);
+		Pattern p2 = Pattern.compile(regex2);
 
 		Matcher m0 = p0.matcher(message);
 		Matcher m1 = p1.matcher(message);
+		Matcher m2 = p2.matcher(message);
 
 		if (m0.lookingAt())
 			return m0.replaceFirst("");
 		else if (m1.lookingAt())
 			return m1.replaceFirst("");
+		else if (m2.lookingAt())
+			return m2.replaceFirst("");
 		else
 			return message;
 	}
@@ -84,20 +89,26 @@ public class CommandParser {
 
 		String regex0 = "<([^>]*)>\\s+";
 		String regex1 = "\\[([^\\]]*)\\]\\s+";
+		String regex2 = "\\[\\[\\]\\]\\s<[^>]*>\\s+";
 
 		Pattern p0 = Pattern.compile(regex0);
 		Pattern p1 = Pattern.compile(regex1);
+		Pattern p2 = Pattern.compile(regex2);
 
 		Matcher m0 = p0.matcher(message);
 		Matcher m1 = p1.matcher(message);
+		Matcher m2 = p2.matcher(message);
 
 		boolean matchFound0 = m0.find();
 		boolean matchFound1 = m1.find();
+		boolean matchFound2 = m2.find();
 
 		if (matchFound0)
 			return m0.group(1);
 		else if (matchFound1)
 			return m1.group(1);
+		else if (matchFound2)
+			return m2.group(1);
 		else
 			return null;
 	}
