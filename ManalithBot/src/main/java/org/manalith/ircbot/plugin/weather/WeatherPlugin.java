@@ -106,14 +106,18 @@ public class WeatherPlugin extends SimplePlugin {
 	@BotCommand("날씨")
 	public String getWUndergroundWeather(@Option(name = "지명", help = "한글 혹은 영문 지명") String keyword) {
 		try {
-
 			final String zmw = getZMWCode(keyword);
 			if (zmw.equals(""))
 				return "해당 지역이 없거나 지역 이름을 잘못 입력하셨습니다.";
 
 			final String reqUrl = "http://api.wunderground.com/api/%s/conditions/lang:KR/q/zmw:%s.json";
 			String rurl = String.format(reqUrl, wUndergroundAPIKey, zmw);
-			JsonNode node = new ObjectMapper().readTree(new URL(rurl)).get("current_observation");
+			JsonNode node = new ObjectMapper().readTree(new URL(rurl));
+
+			if (!node.hasNonNull("current_observation"))
+				return "해당 지역의 기상 데이터가 없습니다.";
+
+			node = node.get("current_observation");
 
 			String location = node.get("display_location").get("full").asText();
 			String condition = node.get("weather").asText();
