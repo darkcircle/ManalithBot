@@ -1,7 +1,8 @@
 /*
- 	org.manalith.ircbot.plugin.weather/WeatherPlugin.java
- 	ManalithBot - An open source IRC bot based on the PircBot Framework.
- 	Copyright (C) 2011  Ki-Beom, Kim
+    org.manalith.ircbot.plugin.weather/WeatherPlugin.java
+    ManalithBot - An open source IRC bot based on the PircBot Framework.
+    Copyright (C) 2011  Ki-Beom Kim
+    Copyright (C) 2016  Seong-ho Cho
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,15 +22,17 @@ package org.manalith.ircbot.plugin.weather;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.manalith.ircbot.annotation.Option;
-import org.manalith.ircbot.common.stereotype.BotCommand;
 import org.manalith.ircbot.plugin.SimplePlugin;
+import org.manalith.ircbot.resources.MessageEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -103,31 +106,39 @@ public class WeatherPlugin extends SimplePlugin {
 		}
 	}
 
-	@BotCommand("날씨")
-	public String getWUndergroundWeather(@Option(name = "지명", help = "한글 혹은 영문 지명") String keyword) {
+	@Override
+	public void onMessage(MessageEvent event) {
+		String[] command = event.getMessage().replaceAll("(\\s){2,}", " ").split("\\s", 2);
+
+		if (StringUtils.equals(command[0], "!날씨")) {
+			event.respond(String.format("[날씨] %s", getWUndergroundWeather(command[1])));
+		}
+	}
+
+	public String getWUndergroundWeather(String keyword) {
 		try {
 			final String zmw = getZMWCode(keyword);
 			if (zmw.equals(""))
 				return "해당 지역이 없거나 지역 이름을 잘못 입력하셨습니다.";
 
-			final String reqUrl = "http://api.wunderground.com/api/%s/conditions/lang:KR/q/zmw:%s.json";
-			String rurl = String.format(reqUrl, wUndergroundAPIKey, zmw);
+			final String req_url = "http://api.wunderground.com/api/%s/conditions/lang:%s/q/zmw:%s.json";
+			String lang = (isLatin1(keyword)) ? "US" : "KR";
+			String rurl = String.format(req_url, wUndergroundAPIKey, lang, zmw);
 			JsonNode node = new ObjectMapper().readTree(new URL(rurl));
 
 			if (!node.hasNonNull("current_observation"))
 				return "해당 지역의 기상 데이터가 없습니다.";
 
 			node = node.get("current_observation");
-
 			String location = node.get("display_location").get("full").asText();
 			String condition = node.get("weather").asText();
 			String temp = node.get("temp_c").asText();
 			String humidity = node.get("relative_humidity").asText().replaceAll("%", "");
-			String windDirection = node.get("wind_dir").asText();
-			String windSpeed = node.get("wind_kph").asText();
+			String wind_direction = node.get("wind_dir").asText();
+			String wind_speed = node.get("wind_kph").asText();
 
-			return String.format("[%s] %s, 온도 %s℃, 습도 %s%%, 풍향: %s, 풍속: %skm/h", location, condition, temp, humidity,
-					windDirection, windSpeed);
+			return String.format("지역: \"%s\", 상태: %s, 온도: %s℃, 습도: %s%%, 풍향: %s, 풍속: %skm/h", location, condition, temp,
+					humidity, wind_direction, wind_speed);
 		} catch (IOException e) {
 			return "오류가 발생했습니다 : " + e.getMessage();
 		}
@@ -135,13 +146,13 @@ public class WeatherPlugin extends SimplePlugin {
 
 	private String getZMWCode(String location) {
 		try {
-			final String autoCompleteRequestUrl = "http://autocomplete.wunderground.com/aq?query=%s";
-			String encodedLocation = URLEncoder.encode(location, "UTF-8");
+			final String autocomplete_request_url = "http://autocomplete.wunderground.com/aq?query=%s";
 
-			HttpGet get = new HttpGet(String.format(autoCompleteRequestUrl, encodedLocation));
+			HttpGet get = new HttpGet(String.format(autocomplete_request_url, URLEncoder.encode(location, "UTF-8")));
 			get.addHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) "
 					+ "AppleWebKit/537.36 (KHTML, like Gecko) " + "Chrome/52.0.2743.82 " + "Safari/537.36");
-			get.addHeader("Accept-Language", "ko-KR,ko;q=0.8,en-US;q=0.6,en;q=0.4");
+			if (!isLatin1(location))
+				get.addHeader("Accept-Language", "ko-KR,ko;q=0.8,en-US;q=0.6,en;q=0.4");
 			String content = IOUtils.toString(HttpClientBuilder.create().build().execute(get).getEntity().getContent());
 
 			JsonNode node = new ObjectMapper().readTree(content).get("RESULTS");
@@ -149,5 +160,9 @@ public class WeatherPlugin extends SimplePlugin {
 		} catch (Exception e) {
 			return "";
 		}
+	}
+
+	private boolean isLatin1(String location) {
+		return Charset.forName("US-ASCII").newEncoder().canEncode(location);
 	}
 }
