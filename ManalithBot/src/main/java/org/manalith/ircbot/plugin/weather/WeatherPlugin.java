@@ -156,7 +156,25 @@ public class WeatherPlugin extends SimplePlugin {
 			String content = IOUtils.toString(HttpClientBuilder.create().build().execute(get).getEntity().getContent());
 
 			JsonNode node = new ObjectMapper().readTree(content).get("RESULTS");
-			return (node.size() == 0) ? "" : node.get(0).get("zmw").asText();
+			if (node.size() == 0)
+				return "";
+			else {
+				int sz = node.size();
+				String result = "";
+
+				for (int i = 0; i < sz; i++) {
+					JsonNode n0 = node.get(i);
+					double lat = n0.get("lat").asDouble();
+					double lon = n0.get("lon").asDouble();
+					if ((-89.9 <= lat && lat <= 89.9) && (-179.9 <= lon && lon <= 179.9)) {
+						result = n0.get("zmw").asText();
+						break;
+					}
+				}
+
+				return result;
+
+			}
 		} catch (Exception e) {
 			return "";
 		}
